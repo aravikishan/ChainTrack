@@ -25,7 +25,7 @@ app = FastAPI(
         "Supply chain tracking system with SHA-256 hash chain, "
         "QR code generation, and tamper detection."
     ),
-    version="1.0.0",
+    version="1.0.1",
     docs_url="/docs",
     redoc_url="/redoc",
 )
