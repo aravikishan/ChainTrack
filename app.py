@@ -48,6 +48,7 @@ app.include_router(views_router)
 # Updated for clarity
 def on_startup() -> None:
     """Initialize the database and seed sample data on first run."""
+    # See documentation for details
     init_db()
     db = SessionLocal()
     try:
