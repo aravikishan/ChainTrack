@@ -1,0 +1,169 @@
+{
+    "locations": [
+        {
+            "name": "Shenzhen Electronics Factory",
+            "address": "123 Manufacturing Blvd",
+            "city": "Shenzhen",
+            "country": "China",
+            "latitude": 22.5431,
+            "longitude": 114.0579,
+            "location_type": "factory"
+        },
+        {
+            "name": "Shanghai International Port",
+            "address": "Waigaoqiao Free Trade Zone",
+            "city": "Shanghai",
+            "country": "China",
+            "latitude": 31.3654,
+            "longitude": 121.5879,
+            "location_type": "port"
+        },
+        {
+            "name": "Los Angeles Port Authority",
+            "address": "425 S Palos Verdes St",
+            "city": "Los Angeles",
+            "country": "USA",
+            "latitude": 33.7405,
+            "longitude": -118.2712,
+            "location_type": "port"
+        },
+        {
+            "name": "Central Distribution Warehouse",
+            "address": "8800 Logistics Parkway",
+            "city": "Dallas",
+            "country": "USA",
+            "latitude": 32.7767,
+            "longitude": -96.7970,
+            "location_type": "warehouse"
+        },
+        {
+            "name": "Munich Customs Office",
+            "address": "Landsberger Str. 110",
+            "city": "Munich",
+            "country": "Germany",
+            "latitude": 48.1351,
+            "longitude": 11.5820,
+            "location_type": "customs"
+        }
+    ],
+    "products": [
+        {
+            "name": "Industrial Sensor Module X500",
+            "sku": "ISM-X500-001",
+            "category": "electronics",
+            "description": "High-precision industrial temperature and humidity sensor with IoT connectivity",
+            "manufacturer": "Shenzhen Electronics Factory",
+            "weight_kg": 0.45,
+            "events": [
+                {
+                    "event_type": "quality_check",
+                    "location": "Shenzhen Electronics Factory",
+                    "actor": "QC Inspector Li",
+                    "data": {"result": "pass", "test_count": 12}
+                },
+                {
+                    "event_type": "shipped",
+                    "location": "Shanghai International Port",
+                    "actor": "Maersk Logistics",
+                    "data": {"carrier": "Maersk", "vessel": "MSC Gulsun"}
+                },
+                {
+                    "event_type": "customs",
+                    "location": "Los Angeles Port Authority",
+                    "actor": "US Customs",
+                    "data": {"clearance_id": "USC-2024-88712"}
+                },
+                {
+                    "event_type": "warehouse",
+                    "location": "Central Distribution Warehouse",
+                    "actor": "Warehouse Manager Johnson",
+                    "data": {"bay": "B-14", "shelf": "3A"}
+                }
+            ]
+        },
+        {
+            "name": "Precision Gear Assembly PGA-200",
+            "sku": "PGA-200-003",
+            "category": "automotive",
+            "description": "CNC-machined precision gear assembly for electric vehicle drivetrains",
+            "manufacturer": "Munich Precision Works",
+            "weight_kg": 12.8,
+            "events": [
+                {
+                    "event_type": "quality_check",
+                    "location": "Munich Precision Works",
+                    "actor": "QA Engineer Schmidt",
+                    "data": {"tolerance_mm": 0.002, "hardness_hrc": 62}
+                },
+                {
+                    "event_type": "shipped",
+                    "location": "Munich Customs Office",
+                    "actor": "DHL Freight",
+                    "data": {"carrier": "DHL", "container": "DHLF-9921"}
+                }
+            ]
+        },
+        {
+            "name": "Organic Green Tea Extract Batch 47",
+            "sku": "GTE-B47-010",
+            "category": "food_beverage",
+            "description": "Certified organic green tea extract powder, batch 47",
+            "manufacturer": "Kyoto Botanical Extracts",
+            "weight_kg": 25.0,
+            "events": [
+                {
+                    "event_type": "quality_check",
+                    "location": "Kyoto Botanical Extracts",
+                    "actor": "Lab Technician Tanaka",
+                    "data": {"purity": "99.2%", "certifications": ["USDA Organic", "JAS"]}
+                },
+                {
+                    "event_type": "shipped",
+                    "location": "Kobe Port",
+                    "actor": "NYK Line",
+                    "data": {"carrier": "NYK", "temperature_controlled": true}
+                },
+                {
+                    "event_type": "customs",
+                    "location": "Los Angeles Port Authority",
+                    "actor": "FDA Inspector",
+                    "data": {"clearance_id": "FDA-2024-GTE-110"}
+                },
+                {
+                    "event_type": "warehouse",
+                    "location": "Central Distribution Warehouse",
+                    "actor": "Cold Storage Team",
+                    "data": {"temperature_c": 4, "humidity_pct": 45}
+                },
+                {
+                    "event_type": "out_for_delivery",
+                    "location": "Dallas Regional Hub",
+                    "actor": "FedEx",
+                    "data": {"tracking": "FX-887123456"}
+                },
+                {
+                    "event_type": "delivered",
+                    "location": "NutraLife Labs, Austin TX",
+                    "actor": "Receiving Dock A",
+                    "data": {"signed_by": "Maria Gonzalez"}
+                }
+            ]
+        },
+        {
+            "name": "Titanium Alloy Surgical Plate",
+            "sku": "TASP-001-R4",
+            "category": "pharmaceuticals",
+            "description": "Grade 5 titanium alloy orthopedic plate, regulatory-tracked",
+            "manufacturer": "Swiss Medical Devices AG",
+            "weight_kg": 0.12,
+            "events": [
+                {
+                    "event_type": "quality_check",
+                    "location": "Swiss Medical Devices AG",
+                    "actor": "ISO Auditor Muller",
+                    "data": {"iso_13485": true, "lot": "SM-2024-0042"}
+                }
+            ]
+        }
+    ]
+}
