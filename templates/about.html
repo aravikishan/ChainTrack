@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}ChainTrack - About{% endblock %}
+{% block nav_about %}active{% endblock %}
+
+{% block content %}
+<div class="about-page">
+    <div class="page-header">
+        <h1>About ChainTrack</h1>
+        <p class="subtitle">Cryptographic supply chain integrity</p>
+    </div>
+
+    <div class="section-card">
+        <h2 class="section-title">What is ChainTrack?</h2>
+        <p>
+            ChainTrack is a supply chain tracking system that uses SHA-256 cryptographic
+            hash chains to create tamper-evident records of every event in a product's
+            journey from manufacturer to customer.
+        </p>
+        <p>
+            Each supply chain event (manufacturing, shipping, customs clearance, warehousing,
+            delivery) is recorded as a block in the chain. Each block contains the SHA-256
+            hash of the previous block, creating an unbreakable chain of evidence.
+        </p>
+    </div>
+
+    <div class="section-card">
+        <h2 class="section-title">Key Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">&#x1f512;</div>
+                <h3>SHA-256 Hash Chain</h3>
+                <p>Every supply chain event is cryptographically linked to the previous one, ensuring data integrity.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1f4f1;</div>
+                <h3>QR Code Tracking</h3>
+                <p>Each product gets a unique QR code that links to its complete supply chain history.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1f6e1;</div>
+                <h3>Tamper Detection</h3>
+                <p>Verification walks the entire chain, recomputing hashes to detect any unauthorized changes.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1f4ca;</div>
+                <h3>Real-time Dashboard</h3>
+                <p>Monitor your entire supply chain with live statistics and event feeds.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1f310;</div>
+                <h3>REST API</h3>
+                <p>Full-featured API for integration with existing supply chain management systems.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1f4e6;</div>
+                <h3>Product Registry</h3>
+                <p>Register and manage products with unique tracking IDs and comprehensive metadata.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2 class="section-title">Technology Stack</h2>
+        <div class="tech-stack">
+            <div class="tech-item">
+                <strong>Backend:</strong> FastAPI (Python)
+            </div>
+            <div class="tech-item">
+                <strong>Database:</strong> SQLite with SQLAlchemy ORM
+            </div>
+            <div class="tech-item">
+                <strong>Cryptography:</strong> SHA-256 (hashlib)
+            </div>
+            <div class="tech-item">
+                <strong>QR Codes:</strong> qrcode + Pillow
+            </div>
+            <div class="tech-item">
+                <strong>Templates:</strong> Jinja2
+            </div>
+            <div class="tech-item">
+                <strong>Validation:</strong> Pydantic v2
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2 class="section-title">API Documentation</h2>
+        <p>
+            ChainTrack provides interactive API documentation via
+            <a href="/docs">Swagger UI</a> and <a href="/redoc">ReDoc</a>.
+        </p>
+        <div class="api-endpoints">
+            <div class="endpoint">
+                <code class="method get">GET</code>
+                <code class="path">/api/products</code>
+                <span class="desc">List all products</span>
+            </div>
+            <div class="endpoint">
+                <code class="method post">POST</code>
+                <code class="path">/api/products</code>
+                <span class="desc">Register a new product</span>
+            </div>
+            <div class="endpoint">
+                <code class="method get">GET</code>
+                <code class="path">/api/chain/{product_id}</code>
+                <span class="desc">Get hash chain for a product</span>
+            </div>
+            <div class="endpoint">
+                <code class="method post">POST</code>
+                <code class="path">/api/chain/event</code>
+                <span class="desc">Record a supply chain event</span>
+            </div>
+            <div class="endpoint">
+                <code class="method get">GET</code>
+                <code class="path">/api/verify/{product_id}</code>
+                <span class="desc">Verify chain integrity</span>
+            </div>
+            <div class="endpoint">
+                <code class="method get">GET</code>
+                <code class="path">/api/track/{tracking_id}</code>
+                <span class="desc">Track product by ID</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

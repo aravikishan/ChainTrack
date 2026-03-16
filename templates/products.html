@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}ChainTrack - Products{% endblock %}
+{% block nav_products %}active{% endblock %}
+
+{% block content %}
+<div class="products-page">
+    <div class="page-header">
+        <h1>Product Registry</h1>
+        <p class="subtitle">Register and manage supply chain products</p>
+    </div>
+
+    <!-- Register New Product -->
+    <div class="section-card">
+        <h2 class="section-title">Register New Product</h2>
+        <form id="product-form" class="product-form" onsubmit="createProduct(event)">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="prod-name">Product Name</label>
+                    <input type="text" id="prod-name" class="form-input" placeholder="Widget Pro X200" required>
+                </div>
+                <div class="form-group">
+                    <label for="prod-sku">SKU</label>
+                    <input type="text" id="prod-sku" class="form-input" placeholder="WPX-200-001" required>
+                </div>
+                <div class="form-group">
+                    <label for="prod-category">Category</label>
+                    <select id="prod-category" class="form-input">
+                        <option value="electronics">Electronics</option>
+                        <option value="pharmaceuticals">Pharmaceuticals</option>
+                        <option value="food_beverage">Food & Beverage</option>
+                        <option value="automotive">Automotive</option>
+                        <option value="textiles">Textiles</option>
+                        <option value="chemicals">Chemicals</option>
+                        <option value="general">General</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="prod-manufacturer">Manufacturer</label>
+                    <input type="text" id="prod-manufacturer" class="form-input" placeholder="Acme Corp">
+                </div>
+                <div class="form-group">
+                    <label for="prod-weight">Weight (kg)</label>
+                    <input type="number" id="prod-weight" class="form-input" step="0.01" value="0" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="prod-description">Description</label>
+                    <input type="text" id="prod-description" class="form-input" placeholder="High-performance industrial widget">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Register Product</button>
+        </form>
+        <div id="product-result" class="result-panel" style="display:none;"></div>
+    </div>
+
+    <!-- Product List -->
+    <div class="section-card">
+        <h2 class="section-title">Registered Products ({{ products | length }})</h2>
+        {% if products %}
+        <div class="events-table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>SKU</th>
+                        <th>Category</th>
+                        <th>Tracking ID</th>
+                        <th>Stage</th>
+                        <th>QR</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in products %}
+                    <tr>
+                        <td class="product-name">{{ p.name }}</td>
+                        <td><code>{{ p.sku }}</code></td>
+                        <td>{{ p.category }}</td>
+                        <td>
+                            <a href="/track/{{ p.tracking_id }}" class="tracking-link">{{ p.tracking_id }}</a>
+                        </td>
+                        <td>
+                            <span class="event-badge badge-{{ p.current_stage }}">
+                                {{ stage_labels.get(p.current_stage, p.current_stage) }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if p.qr_data %}
+                            <button class="btn btn-sm btn-outline" onclick="showQR('{{ p.qr_data }}', '{{ p.tracking_id }}')">
+                                View QR
+                            </button>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="/track/{{ p.tracking_id }}" class="btn btn-sm btn-primary">Track</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>No products registered. Use the form above to register your first product.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Record Event -->
+    <div class="section-card">
+        <h2 class="section-title">Record Supply Chain Event</h2>
+        <form id="event-form" class="product-form" onsubmit="recordEvent(event)">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="event-product">Product</label>
+                    <select id="event-product" class="form-input" required>
+                        <option value="">Select a product...</option>
+                        {% for p in products %}
+                        <option value="{{ p.id }}">{{ p.name }} ({{ p.tracking_id }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="event-type">Event Type</label>
+                    <select id="event-type" class="form-input" required>
+                        <option value="manufactured">Manufactured</option>
+                        <option value="quality_check">Quality Check</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="customs">Customs Clearance</option>
+                        <option value="warehouse">Warehouse</option>
+                        <option value="out_for_delivery">Out for Delivery</option>
+                        <option value="delivered">Delivered</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="event-location">Location</label>
+                    <input type="text" id="event-location" class="form-input" placeholder="Shanghai Port">
+                </div>
+                <div class="form-group">
+                    <label for="event-actor">Actor</label>
+                    <input type="text" id="event-actor" class="form-input" placeholder="Inspector Zhang">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Record Event</button>
+        </form>
+        <div id="event-result" class="result-panel" style="display:none;"></div>
+    </div>
+</div>
+
+<!-- QR Modal -->
+<div id="qr-modal" class="modal" style="display:none;" onclick="closeQR(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="document.getElementById('qr-modal').style.display='none'">&times;</button>
+        <h3 id="qr-title">QR Code</h3>
+        <img id="qr-image" src="" alt="QR Code" class="qr-image">
+        <p class="qr-instructions">Scan this QR code to track this product</p>
+    </div>
+</div>
+{% endblock %}

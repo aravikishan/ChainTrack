@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}ChainTrack - Dashboard{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="page-header">
+        <h1>Supply Chain Dashboard</h1>
+        <p class="subtitle">Real-time overview of your supply chain integrity</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon products-icon">&#x1f4e6;</div>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.total_products }}</span>
+                <span class="stat-label">Products</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon blocks-icon">&#x26d3;</div>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.total_blocks }}</span>
+                <span class="stat-label">Chain Blocks</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon shipments-icon">&#x1f69a;</div>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.active_shipments }}</span>
+                <span class="stat-label">Active Shipments</span>
+            </div>
+        </div>
+        <div class="stat-card integrity-card">
+            <div class="stat-icon integrity-icon">&#x1f6e1;</div>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.chain_integrity }}%</span>
+                <span class="stat-label">Chain Integrity</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stage Distribution -->
+    <div class="section-card">
+        <h2 class="section-title">Supply Chain Stage Distribution</h2>
+        <div class="stage-bar-container">
+            {% for stage in ["manufactured", "quality_check", "shipped", "customs", "warehouse", "out_for_delivery", "delivered"] %}
+            <div class="stage-bar-item">
+                <div class="stage-bar-label">
+                    <span>{{ stage_labels.get(stage, stage) }}</span>
+                    <span class="stage-count">{{ stats.stage_counts.get(stage, 0) }}</span>
+                </div>
+                <div class="stage-bar">
+                    {% set count = stats.stage_counts.get(stage, 0) %}
+                    {% set max_count = stats.total_products if stats.total_products > 0 else 1 %}
+                    <div class="stage-bar-fill stage-{{ stage }}" style="width: {{ (count / max_count * 100) | int }}%"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Recent Events -->
+    <div class="section-card">
+        <h2 class="section-title">Recent Supply Chain Events</h2>
+        {% if stats.recent_events %}
+        <div class="events-table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Tracking ID</th>
+                        <th>Event</th>
+                        <th>Location</th>
+                        <th>Hash</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in stats.recent_events %}
+                    <tr>
+                        <td>{{ event.product_name }}</td>
+                        <td>
+                            <a href="/track/{{ event.tracking_id }}" class="tracking-link">
+                                {{ event.tracking_id }}
+                            </a>
+                        </td>
+                        <td><span class="event-badge badge-{{ event.event_type }}">{{ stage_labels.get(event.event_type, event.event_type) }}</span></td>
+                        <td>{{ event.location }}</td>
+                        <td><code class="hash-code">{{ event.hash_prefix }}</code></td>
+                        <td class="timestamp">{{ event.timestamp[:19] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>No events recorded yet. <a href="/products">Register a product</a> to get started.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Quick Track -->
+    <div class="section-card">
+        <h2 class="section-title">Quick Track</h2>
+        <form class="track-form" onsubmit="quickTrack(event)">
+            <div class="input-group">
+                <input type="text" id="quick-track-input" placeholder="Enter Tracking ID (e.g. CT-A1B2C3D4)" class="form-input" required>
+                <button type="submit" class="btn btn-primary">Track</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

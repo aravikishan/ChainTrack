@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}ChainTrack - Verify{% endblock %}
+{% block nav_verify %}active{% endblock %}
+
+{% block content %}
+<div class="verify-page">
+    <div class="page-header">
+        <h1>Chain Integrity Verification</h1>
+        <p class="subtitle">Cryptographically verify the authenticity of supply chain records</p>
+    </div>
+
+    <!-- Verify by Product -->
+    <div class="section-card">
+        <h2 class="section-title">Verify Product Chain</h2>
+        <p class="section-desc">
+            Select a product to walk its hash chain and verify every block.
+            Each block's SHA-256 hash is recomputed and compared to the stored value.
+            Any discrepancy indicates tampering.
+        </p>
+        <form id="verify-form" class="verify-form" onsubmit="verifyChain(event)">
+            <div class="input-group">
+                <select id="verify-product" class="form-input" required>
+                    <option value="">Select a product...</option>
+                    {% for p in products %}
+                    <option value="{{ p.id }}">{{ p.name }} ({{ p.tracking_id }})</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary" id="verify-btn">Verify Chain</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Verify by Tracking ID -->
+    <div class="section-card">
+        <h2 class="section-title">Verify by Tracking ID</h2>
+        <form id="verify-tracking-form" class="verify-form" onsubmit="verifyByTracking(event)">
+            <div class="input-group">
+                <input type="text" id="verify-tracking-input" class="form-input" placeholder="Enter Tracking ID (e.g. CT-A1B2C3D4)" required>
+                <button type="submit" class="btn btn-primary">Verify</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Verification Results -->
+    <div id="verify-results" class="section-card" style="display:none;">
+        <h2 class="section-title">Verification Results</h2>
+        <div id="verify-animation" class="verify-animation">
+            <div class="verify-progress">
+                <div class="verify-progress-bar" id="verify-progress-bar"></div>
+            </div>
+            <p id="verify-status-text" class="verify-status-text">Verifying blocks...</p>
+        </div>
+        <div id="verify-outcome" style="display:none;">
+            <div id="verify-banner" class="verification-banner"></div>
+            <div id="verify-details" class="verify-details"></div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="section-card">
+        <h2 class="section-title">How Verification Works</h2>
+        <div class="how-it-works">
+            <div class="how-step">
+                <div class="how-step-number">1</div>
+                <div class="how-step-content">
+                    <h3>Genesis Block</h3>
+                    <p>Each product's chain starts with a genesis block whose previous hash is all zeros. This anchors the chain.</p>
+                </div>
+            </div>
+            <div class="how-step">
+                <div class="how-step-number">2</div>
+                <div class="how-step-content">
+                    <h3>Block Linking</h3>
+                    <p>Every subsequent block stores the SHA-256 hash of the previous block, creating an unbreakable link.</p>
+                </div>
+            </div>
+            <div class="how-step">
+                <div class="how-step-number">3</div>
+                <div class="how-step-content">
+                    <h3>Hash Recomputation</h3>
+                    <p>During verification, each block's hash is recomputed from its data. If any field was altered, the hash will differ.</p>
+                </div>
+            </div>
+            <div class="how-step">
+                <div class="how-step-number">4</div>
+                <div class="how-step-content">
+                    <h3>Tamper Detection</h3>
+                    <p>A mismatch in any block proves tampering. Because each block depends on the previous, changing one block invalidates all subsequent blocks.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

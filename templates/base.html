@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ChainTrack{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f517;</text></svg>">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <span class="chain-icon">&#x1f517;</span>
+                <span>ChainTrack</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link {% block nav_dashboard %}{% endblock %}">Dashboard</a>
+                <a href="/products" class="nav-link {% block nav_products %}{% endblock %}">Products</a>
+                <a href="/verify" class="nav-link {% block nav_verify %}{% endblock %}">Verify</a>
+                <a href="/about" class="nav-link {% block nav_about %}{% endblock %}">About</a>
+                <a href="/docs" class="nav-link" target="_blank">API Docs</a>
+            </div>
+            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+                &#9776;
+            </button>
+        </div>
+    </nav>
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 ChainTrack &mdash; Supply Chain Integrity Through Cryptographic Verification</p>
+            <p class="footer-tech">Built with FastAPI &bull; SHA-256 &bull; SQLite</p>
+        </div>
+    </footer>
+    <script src="/static/js/main.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

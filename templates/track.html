@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}ChainTrack - Track {{ tracking_id }}{% endblock %}
+
+{% block content %}
+<div class="track-page">
+    <div class="page-header">
+        <h1>Track Product</h1>
+        <p class="subtitle">Supply chain journey for <strong>{{ tracking_id }}</strong></p>
+    </div>
+
+    <!-- Search Form -->
+    <div class="section-card">
+        <form class="track-form" onsubmit="quickTrack(event)">
+            <div class="input-group">
+                <input type="text" id="quick-track-input" value="{{ tracking_id }}" placeholder="Enter Tracking ID" class="form-input" required>
+                <button type="submit" class="btn btn-primary">Track</button>
+            </div>
+        </form>
+    </div>
+
+    {% if product %}
+    <!-- Product Info -->
+    <div class="section-card product-detail">
+        <div class="product-header">
+            <div class="product-info">
+                <h2>{{ product.name }}</h2>
+                <div class="product-meta">
+                    <span><strong>SKU:</strong> {{ product.sku }}</span>
+                    <span><strong>Category:</strong> {{ product.category }}</span>
+                    <span><strong>Manufacturer:</strong> {{ product.manufacturer }}</span>
+                    <span><strong>Weight:</strong> {{ product.weight_kg }} kg</span>
+                </div>
+                <div class="current-stage">
+                    Current Stage:
+                    <span class="event-badge badge-{{ product.current_stage }}">
+                        {{ stage_labels.get(product.current_stage, product.current_stage) }}
+                    </span>
+                </div>
+            </div>
+            {% if product.qr_data %}
+            <div class="product-qr">
+                <img src="data:image/png;base64,{{ product.qr_data }}" alt="QR Code" class="qr-thumb">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Supply Chain Timeline -->
+    <div class="section-card">
+        <h2 class="section-title">Supply Chain Timeline</h2>
+        <div class="timeline">
+            {% for stage in stages %}
+            <div class="timeline-step {% if product.current_stage == stage %}current{% endif %} {% set ns = namespace(completed=false) %}{% for s in stages %}{% if s == product.current_stage %}{% set ns.completed = true %}{% endif %}{% endfor %}">
+                <div class="timeline-marker {% set completed_stages = [] %}{% for s in stages %}{% if loop.index0 <= stages.index(product.current_stage) %}{% set _ = completed_stages.append(s) %}{% endif %}{% endfor %}{% if stage in completed_stages %}completed{% endif %}">
+                    <span class="timeline-icon">{{ stage_icons.get(stage, '') }}</span>
+                </div>
+                <div class="timeline-label">{{ stage_labels.get(stage, stage) }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Hash Chain Visualization -->
+    <div class="section-card">
+        <h2 class="section-title">Hash Chain</h2>
+        {% if summary and summary.verification %}
+        <div class="verification-banner {% if summary.verification.is_valid %}valid{% else %}invalid{% endif %}">
+            {% if summary.verification.is_valid %}
+            &#x2705; Chain Verified: All {{ summary.verification.total_blocks }} blocks are authentic
+            {% else %}
+            &#x26a0; Tamper Detected: {{ summary.verification.tampered_blocks | length }} compromised blocks
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="chain-visualization" id="chain-vis">
+            {% for block in chain %}
+            <div class="chain-block" data-index="{{ block.block_index }}">
+                <div class="block-header">
+                    <span class="block-index">Block #{{ block.block_index }}</span>
+                    <span class="block-event event-badge badge-{{ block.event_type }}">{{ stage_labels.get(block.event_type, block.event_type) }}</span>
+                </div>
+                <div class="block-body">
+                    <div class="block-field">
+                        <span class="field-label">Location:</span>
+                        <span class="field-value">{{ block.location or 'N/A' }}</span>
+                    </div>
+                    <div class="block-field">
+                        <span class="field-label">Actor:</span>
+                        <span class="field-value">{{ block.actor or 'N/A' }}</span>
+                    </div>
+                    <div class="block-field">
+                        <span class="field-label">Time:</span>
+                        <span class="field-value timestamp">{{ block.timestamp.strftime('%Y-%m-%d %H:%M') if block.timestamp else 'N/A' }}</span>
+                    </div>
+                </div>
+                <div class="block-hashes">
+                    <div class="hash-row">
+                        <span class="hash-label">Prev:</span>
+                        <code class="hash-value">{{ block.previous_hash[:24] }}...</code>
+                    </div>
+                    <div class="hash-row">
+                        <span class="hash-label">Hash:</span>
+                        <code class="hash-value current-hash">{{ block.block_hash[:24] }}...</code>
+                    </div>
+                </div>
+            </div>
+            {% if not loop.last %}
+            <div class="chain-link">
+                <div class="link-line"></div>
+                <div class="link-arrow">&#x25BC;</div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {% else %}
+    <div class="section-card">
+        <div class="empty-state">
+            <h3>Product Not Found</h3>
+            <p>No product found with tracking ID <strong>{{ tracking_id }}</strong>.</p>
+            <p>Please check the ID and try again, or <a href="/products">browse all products</a>.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
