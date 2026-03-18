@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  chaintrack:
+    build: .
+    container_name: chaintrack
+    ports:
+      - "8004:8004"
+    environment:
+      - CHAINTRACK_PORT=8004
+      - CHAINTRACK_DEBUG=false
+    volumes:
+      - chaintrack_data:/app/instance
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  chaintrack_data:
